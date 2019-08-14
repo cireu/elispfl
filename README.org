@@ -3,6 +3,8 @@
 This package was extracted and refactored from [[https://github.com/hlissner/doom-emacs][doom-emacs]], Thanks [[https://github.com/hlissner/doom-emacs][hlissner]]'s
 work!
 
+[[file:screenshot/screenshot.png][Screenshot]]
+
 * Usage
 
 Clone this repo and put it under your =load-path=. Then add this snippet in your
