@@ -3,7 +3,7 @@
 This package was extracted and refactored from [[https://github.com/hlissner/doom-emacs][doom-emacs]], Thanks [[https://github.com/hlissner/doom-emacs][hlissner]]'s
 work!
 
-[[file:screenshot/screenshot.png][Screenshot]]
+[[file:screenshot/screenshot.png]]
 
 * Usage
 
@@ -13,11 +13,8 @@ Clone this repo and put it under your =load-path=. Then add this snippet in your
 #+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'elisp-mode
     (require 'elispfl)
-    (global-elispfl-mode))
+    (elispfl-mode))
 #+END_SRC
-
-If your want to enable =elispfl= in specified buffer. check
-=elispfl-local-mode=.
 
 * License
 

@@ -25,7 +25,7 @@
 
 ;;; Commentary:
 
-;; Run `elispfl-local-mode' or `global-elispfl-mode', made your emacs lisp mode
+;; Run `elispfl-mode', made your emacs lisp mode
 ;; much more fancy!
 
 ;;; Code:
@@ -95,20 +95,15 @@ library/userland functions"
     nil))
 
 ;;;###autoload
-(define-minor-mode elispfl-local-mode
+(define-minor-mode elispfl-mode
   "Enhanced font lock for `emacs-lisp-mode'."
+  :global t
   (let ((keywords-alist
          '((elispfl-extra-fontlock-matcher! . elispfl-face)))
-        (executor (if elispfl-local-mode
+        (executor (if elispfl-mode
                       #'font-lock-add-keywords
                     #'font-lock-remove-keywords)))
     (funcall executor 'emacs-lisp-mode keywords-alist)))
-
-(defun elispfl--turn-on ()
-  (elispfl-local-mode))
-
-;;;###autoload
-(define-globalized-minor-mode global-elispfl-mode elispfl-local-mode elispfl--turn-on)
 
 (provide 'elispfl)
 ;;; elispfl.el ends here
