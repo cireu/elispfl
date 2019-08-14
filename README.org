@@ -1,0 +1,22 @@
+#+TITLE: elispfl -- Extra font lock made your Elisp mode fancy
+
+This package was extracted and refactored from [[https://github.com/hlissner/doom-emacs][doom-emacs]], Thanks [[https://github.com/hlissner/doom-emacs][hlissner]]'s
+work!
+
+* Usage
+
+Clone this repo and put it under your =load-path=. Then add this snippet in your
+=emacs.d=.
+
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'elisp-mode
+    (require 'elispfl)
+    (global-elispfl-mode))
+#+END_SRC
+
+If your want to enable =elispfl= in specified buffer. check
+=elispfl-local-mode=.
+
+* License
+
+GPLv3
