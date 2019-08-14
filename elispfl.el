@@ -97,7 +97,6 @@ library/userland functions"
 ;;;###autoload
 (define-minor-mode elispfl-local-mode
   "Enhanced font lock for `emacs-lisp-mode'."
-  :global t
   (let ((keywords-alist
          '((elispfl-extra-fontlock-matcher! . elispfl-face)))
         (executor (if elispfl-local-mode
