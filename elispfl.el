@@ -25,8 +25,7 @@
 
 ;;; Commentary:
 
-;; Run `elispfl-mode', made your emacs lisp mode
-;; much more fancy!
+;; Run `elispfl-mode', made your emacs-lisp mode much more fancy!
 
 ;;; Code:
 
@@ -49,17 +48,19 @@ All alias and advice will be remove."
              (not (eq unaliased unadvised))))
     fn))
 
-(defun elispfl--get-face (sym &optional head?)
+(defun elispfl--get-face (sym &optional subr-call?)
   "Get appropriate face of SYM.
 
 Sign: (->* (Sym) (Bool) (Option (U 'font-lock-constant-face
                                    'font-lock-variable-name-face
-                                   'font-lock-function-name-face)))"
+                                   'font-lock-function-name-face)))
+
+If SUBR-CALL?, means SYM is appeared in a subroutine call form."
   (cond ((booleanp sym) nil)
         ((special-variable-p sym)
          'font-lock-variable-name-face)
         ((and (fboundp sym)
-              head?)
+              subr-call?)
          (let ((real-fn (elispfl--real-function sym)))
            ;; Macro and special-form already had font lock.
            (unless (or (macrop real-fn)
@@ -77,18 +78,21 @@ Sign: (-> Bool)"
            (or (nth 3 ppss) (nth 4 ppss))))))
 
 (defun elispfl-extra-fontlock-matcher! (end)
-  "Match defined variables and functions.
+  "Match defined variables and functions in current buffer with limited to END.
 
 Sign: (-> Long Bool)
 
 Functions are differentiated into special forms, built-in functions and
-library/userland functions"
+library/userland functions."
   (catch 'stop
     (while (re-search-forward "\\_<.+?\\_>" end t)
       (when (elispfl-inside-code?)
         (let* ((sym (intern-soft (match-string-no-properties 0)))
-               (head? (eq (char-before (match-beginning 0)) ?\())
-               (face (elispfl--get-face sym head?)))
+               ;; NOTE: We treat symbol after left round bracket as subroutine.
+               ;; May trigger false positive in list literal(e.g '(foo bar)),
+               ;; but it's suitable for most case.
+               (subr-call? (eq (char-before (match-beginning 0)) ?\())
+               (face (elispfl--get-face sym subr-call?)))
           (when face
             (setq elispfl-face face)
             (throw 'stop t)))))
