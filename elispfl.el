@@ -56,18 +56,18 @@ Sign: (->* (Sym) (Bool) (Option (U 'font-lock-constant-face
                                    'font-lock-function-name-face)))
 
 If SUBR-CALL?, means SYM is appeared in a subroutine call form."
-  (cond ((booleanp sym) nil)
+  (cond ((booleanp sym))
+        (subr-call?
+         (when (fboundp sym)
+           (let ((real-fn (elispfl--real-function sym)))
+             ;; Macro and special-form already had font lock.
+             (unless (or (macrop real-fn)
+                         (special-form-p real-fn))
+               (if (subrp real-fn)
+                   'font-lock-constant-face
+                 'font-lock-function-name-face)))))
         ((special-variable-p sym)
-         'font-lock-variable-name-face)
-        ((and (fboundp sym)
-              subr-call?)
-         (let ((real-fn (elispfl--real-function sym)))
-           ;; Macro and special-form already had font lock.
-           (unless (or (macrop real-fn)
-                       (special-form-p real-fn))
-             (if (subrp real-fn)
-                 'font-lock-constant-face
-               'font-lock-function-name-face))))))
+         'font-lock-variable-name-face)))
 
 (defsubst elispfl-inside-code? ()
   "Return t if current point not in comment or string.
