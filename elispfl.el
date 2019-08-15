@@ -56,7 +56,7 @@ Sign: (->* (Sym) (Bool) (Option (U 'font-lock-constant-face
                                    'font-lock-function-name-face)))
 
 If SUBR-CALL?, means SYM is appeared in a subroutine call form."
-  (cond ((booleanp sym))
+  (cond ((booleanp sym) nil)
         (subr-call?
          (when (fboundp sym)
            (let ((real-fn (elispfl--real-function sym)))
