@@ -40,7 +40,7 @@
 
 Sign: (-> Sym Fn)
 
-All alias and advice will be remove."
+All aliases and advices will be removed."
   (let ((fn (indirect-function sym)))
     (while (let* ((unadvised (ad-get-orig-definition fn))
                   (unaliased (indirect-function unadvised)))
@@ -49,7 +49,7 @@ All alias and advice will be remove."
     fn))
 
 (defun elispfl--get-face (sym &optional subr-call?)
-  "Get appropriate face of SYM.
+  "Get appropriate face for SYM.
 
 Sign: (->* (Sym) (Bool) (Option (U 'font-lock-constant-face
                                    'font-lock-variable-name-face
@@ -89,8 +89,8 @@ library/userland functions."
       (when (elispfl-inside-code?)
         (let* ((sym (intern-soft (match-string-no-properties 0)))
                ;; NOTE: We treat symbol after left round bracket as subroutine.
-               ;; May trigger false positive in list literal(e.g '(foo bar)),
-               ;; but it's suitable for most case.
+               ;; May trigger false positive in list literal e.g. '(foo bar),
+               ;; but it's suitable for most cases.
                (subr-call? (eq (char-before (match-beginning 0)) ?\())
                (face (elispfl--get-face sym subr-call?)))
           (when face
