@@ -107,7 +107,8 @@ library/userland functions."
         (executor (if elispfl-mode
                       #'font-lock-add-keywords
                     #'font-lock-remove-keywords)))
-    (funcall executor 'emacs-lisp-mode keywords-alist)))
+    (funcall executor 'emacs-lisp-mode keywords-alist)
+    (font-lock-flush)))
 
 (provide 'elispfl)
 ;;; elispfl.el ends here
