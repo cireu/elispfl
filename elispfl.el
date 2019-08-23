@@ -91,6 +91,8 @@ library/userland functions."
                ;; NOTE: We treat symbol after left round bracket as subroutine.
                ;; May trigger false positive in list literal e.g. '(foo bar),
                ;; but it's suitable for most cases.
+               ;; And another consideraion was that quotes were used
+               ;; frequently in macros.
                (subr-call? (eq (char-before (match-beginning 0)) ?\())
                (face (elispfl--get-face sym subr-call?)))
           (when face
