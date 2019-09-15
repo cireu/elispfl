@@ -73,9 +73,8 @@ If SUBR-CALL?, means SYM is appeared in a subroutine call form."
   "Return t if current point not in comment or string.
 
 Sign: (-> Bool)"
-  (not (save-excursion
-         (let ((ppss (syntax-ppss)))
-           (or (nth 3 ppss) (nth 4 ppss))))))
+  (not (let ((ppss (syntax-ppss)))
+         (or (nth 3 ppss) (nth 4 ppss)))))
 
 (defun elispfl-extra-fontlock-matcher! (end)
   "Match defined variables and functions in current buffer with limited to END.
