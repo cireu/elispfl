@@ -36,7 +36,7 @@
   "A variable to hold current face used to render.")
 
 (defun elispfl--real-function (sym)
-  "Unwinding function chain of SYM and return real function definition.
+  "Unwinding function definition chain of SYM and return real definition.
 
 Sign: (-> Sym Fn)
 
@@ -55,7 +55,10 @@ Sign: (->* (Sym) (Bool) (Option (U 'font-lock-constant-face
                                    'font-lock-variable-name-face
                                    'font-lock-function-name-face)))
 
-If SUBR-CALL?, means SYM is appeared in a subroutine call form."
+If SUBR-CALL?, means SYM is appeared in a subroutine call form.
+
+Return a symbol that indicates a face or `nil'. If return nil, means this
+symbol should be handled by other font-lock rules."
   (cond ((booleanp sym) nil)
         (subr-call?
          (when (fboundp sym)
@@ -77,7 +80,7 @@ Sign: (-> Bool)"
          (or (nth 3 ppss) (nth 4 ppss)))))
 
 (defun elispfl-extra-fontlock-matcher! (end)
-  "Match defined variables and functions in current buffer with limited to END.
+  "Match defined variables and functions in current buffer limited to END.
 
 Sign: (-> Long Bool)
 
