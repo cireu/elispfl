@@ -63,12 +63,16 @@ symbol should be handled by other font-lock rules."
         (subr-call?
          (when (fboundp sym)
            (let ((real-fn (elispfl--real-function sym)))
-             ;; Macro and special-form already had font lock.
-             (unless (or (macrop real-fn)
-                         (special-form-p real-fn))
-               (if (subrp real-fn)
-                   'font-lock-constant-face
-                 'font-lock-function-name-face)))))
+             (cond (
+                    ;; Macro and special-form already had font lock.
+                    (or (macrop real-fn)
+                        (special-form-p real-fn))
+                    nil)
+
+                   ((subrp real-fn)
+                    'font-lock-constant-face)
+                   (t
+                    'font-lock-function-name-face)))))
         ((special-variable-p sym)
          'font-lock-variable-name-face)))
 
