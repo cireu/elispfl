@@ -31,6 +31,7 @@
 
 (require 'advice)
 (require 'font-lock)
+(eval-when-compile (require 'cl-lib))
 
 (defvar elispfl-face nil
   "A variable to hold current face used to render.")
@@ -63,16 +64,12 @@ symbol should be handled by other font-lock rules."
         (subr-call?
          (when (fboundp sym)
            (let ((real-fn (elispfl--real-function sym)))
-             (cond (
-                    ;; Macro and special-form already had font lock.
-                    (or (macrop real-fn)
-                        (special-form-p real-fn))
-                    nil)
-
-                   ((subrp real-fn)
-                    'font-lock-constant-face)
-                   (t
-                    'font-lock-function-name-face)))))
+             (cl-typecase real-fn
+               ((or macro special-form)
+                ;; Macro and special-form already had font lock.
+                nil)
+               (subr 'font-lock-constant-face)
+               (otherwise 'font-lock-function-name-face)))))
         ((special-variable-p sym)
          'font-lock-variable-name-face)))
 
