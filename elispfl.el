@@ -54,7 +54,8 @@ All aliases and advices will be removed."
 
 Sign: (->* (Sym) (Bool) (Option (U 'font-lock-constant-face
                                    'font-lock-variable-name-face
-                                   'font-lock-function-name-face)))
+                                   'font-lock-function-name-face
+                                   'font-lock-keyword-face)))
 
 If SUBR-CALL?, means SYM is appeared in a subroutine call form.
 
@@ -65,9 +66,7 @@ symbol should be handled by other font-lock rules."
          (when (fboundp sym)
            (let ((real-fn (elispfl--real-function sym)))
              (cl-typecase real-fn
-               ((or macro special-form)
-                ;; Macro and special-form already had font lock.
-                nil)
+               ((or macro special-form) 'font-lock-keyword-face)
                (subr 'font-lock-constant-face)
                (otherwise 'font-lock-function-name-face)))))
         ((special-variable-p sym)
