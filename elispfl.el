@@ -102,12 +102,19 @@ library/userland functions."
             (throw 'stop t)))))
     nil))
 
+(defvar elispfl--elisp-mode-extra-font-lock-keyword
+  '((elispfl-extra-fontlock-matcher! . elispfl-face)))
+
 ;;;###autoload
 (define-minor-mode elispfl-mode
   "Enhanced font lock for `emacs-lisp-mode'."
   :global t
-  (let ((keywords-alist
-         '((elispfl-extra-fontlock-matcher! . elispfl-face)))
+  (let ((executor (if elispfl-mode
+                      #'font-lock-add-keywords
+                    #'font-lock-remove-keywords)))
+    (funcall executor 'emacs-lisp-mode
+             elispfl--elisp-mode-extra-font-lock-keyword)
+    (font-lock-flush)))
         (executor (if elispfl-mode
                       #'font-lock-add-keywords
                     #'font-lock-remove-keywords)))
