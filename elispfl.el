@@ -31,6 +31,7 @@
 
 (require 'advice)
 (require 'font-lock)
+(require 'lisp-mode)
 (eval-when-compile (require 'cl-lib))
 
 (defvar elispfl-face nil
@@ -115,10 +116,44 @@ library/userland functions."
     (funcall executor 'emacs-lisp-mode
              elispfl--elisp-mode-extra-font-lock-keyword)
     (font-lock-flush)))
-        (executor (if elispfl-mode
+
+(defun elispfl--constrain-matcher-to-after-prompt (matcher)
+  "Constrain a font-lock matcher only match the contents after comint prompt.
+
+Sign: (-> (U Str (-> Long Bool)) (-> Long Bool))"
+  (lambda (end)
+    (and (cl-typecase matcher
+           (string (re-search-forward matcher end t))
+           (otherwise (funcall matcher end)))
+         (let ((prompt-end (cdr comint-last-prompt))
+               (start (match-beginning 0)))
+           (> start prompt-end))
+         ;; Some matcher don't handle this
+         (elispfl-inside-code?))))
+
+(defvar elispfl--ielm-extra-font-lock-keyword-list
+  (cl-labels ((map-first-item (func list)
+                (mapcar (cl-function
+                         (lambda ((first . rest))
+                           (cons (funcall func first) rest)))
+                        list)))
+    `(,(map-first-item #'elispfl--constrain-matcher-to-after-prompt
+                       '((elispfl-extra-fontlock-matcher! . elispfl-face)))
+      ,(map-first-item #'elispfl--constrain-matcher-to-after-prompt
+                       lisp-el-font-lock-keywords-1)
+      ,(map-first-item #'elispfl--constrain-matcher-to-after-prompt
+                       lisp-el-font-lock-keywords-2)))
+  "A List of font-lock rules will be applied to `ielm'.")
+
+;;;###autoload
+(define-minor-mode elispfl-ielm-mode
+  "Enhanced font lock for `ielm'."
+  :global t
+  (let ((executor (if elispfl-mode
                       #'font-lock-add-keywords
                     #'font-lock-remove-keywords)))
-    (funcall executor 'emacs-lisp-mode keywords-alist)
+    (dolist (it elispfl--ielm-extra-font-lock-keyword-list)
+      (funcall executor 'inferior-emacs-lisp-mode it))
     (font-lock-flush)))
 
 (provide 'elispfl)

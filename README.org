@@ -5,6 +5,8 @@ work!
 
 [[file:screenshot/screenshot.png]]
 
+[[file:screenshot/ielm.png]]
+
 * Usage
 
 Clone this repo and put it under your =load-path=. Then add this snippet in your
@@ -14,6 +16,14 @@ Clone this repo and put it under your =load-path=. Then add this snippet in your
   (with-eval-after-load 'elisp-mode
     (require 'elispfl)
     (elispfl-mode))
+#+END_SRC
+
+With this, enable font-lock in your =ielm=
+
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load  'ielm
+    (require 'elispfl)
+    (elispfl-ielm-mode))
 #+END_SRC
 
 * License
