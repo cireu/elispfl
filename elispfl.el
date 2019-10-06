@@ -131,18 +131,16 @@ Sign: (-> (U Str (-> Long Bool)) (-> Long Bool))"
          ;; Some matcher don't handle this
          (elispfl-inside-code?))))
 
-(defvar elispfl--ielm-extra-font-lock-keyword-list
+(defvar elispfl--ielm-extra-font-lock-keywords
   (cl-labels ((map-first-item (func list)
                 (mapcar (cl-function
                          (lambda ((first . rest))
                            (cons (funcall func first) rest)))
                         list)))
-    `(,(map-first-item #'elispfl--constrain-matcher-to-after-prompt
-                       '((elispfl-extra-fontlock-matcher! . elispfl-face)))
-      ,(map-first-item #'elispfl--constrain-matcher-to-after-prompt
-                       lisp-el-font-lock-keywords-1)
-      ,(map-first-item #'elispfl--constrain-matcher-to-after-prompt
-                       lisp-el-font-lock-keywords-2)))
+    (map-first-item #'elispfl--constrain-matcher-to-after-prompt
+                    `((elispfl-extra-fontlock-matcher! . elispfl-face)
+                      ,@lisp-el-font-lock-keywords-1
+                      ,@lisp-el-font-lock-keywords-2)))
   "A List of font-lock rules will be applied to `ielm'.")
 
 ;;;###autoload
@@ -152,8 +150,8 @@ Sign: (-> (U Str (-> Long Bool)) (-> Long Bool))"
   (let ((executor (if elispfl-mode
                       #'font-lock-add-keywords
                     #'font-lock-remove-keywords)))
-    (dolist (it elispfl--ielm-extra-font-lock-keyword-list)
-      (funcall executor 'inferior-emacs-lisp-mode it))
+    (funcall executor 'inferior-emacs-lisp-mode
+             elispfl--ielm-extra-font-lock-keywords)
     (font-lock-flush)))
 
 (provide 'elispfl)
