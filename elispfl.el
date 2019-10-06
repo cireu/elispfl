@@ -5,7 +5,7 @@
 ;; Author: Zhu Zihao <all_but_last@163.com>
 ;; URL: https://github.com/cireu/elispfl
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "24.3"))
 ;; Keywords: lisp
 
 ;; This file is NOT part of GNU Emacs.
@@ -36,6 +36,11 @@
 
 (defvar elispfl-face nil
   "A variable to hold current face used to render.")
+
+(defalias 'elispfl--font-lock-flush (if (fboundp 'font-lock-flush)
+                                        'font-lock-flush
+                                      'font-lock-fontify-buffer)
+  "A shim of `font-lock-fontify-buffer' for 24.3.")
 
 (defun elispfl--real-function (sym)
   "Unwinding function definition chain of SYM and return real definition.
@@ -115,7 +120,7 @@ library/userland functions."
                     #'font-lock-remove-keywords)))
     (funcall executor 'emacs-lisp-mode
              elispfl--elisp-mode-extra-font-lock-keyword)
-    (font-lock-flush)))
+    (elispfl--font-lock-flush)))
 
 (defun elispfl--constrain-matcher-to-after-prompt (matcher)
   "Constrain a font-lock matcher only match the contents after comint prompt.
@@ -152,7 +157,7 @@ Sign: (-> (U Str (-> Long Bool)) (-> Long Bool))"
                     #'font-lock-remove-keywords)))
     (funcall executor 'inferior-emacs-lisp-mode
              elispfl--ielm-extra-font-lock-keywords)
-    (font-lock-flush)))
+    (elispfl--font-lock-flush)))
 
 (provide 'elispfl)
 ;;; elispfl.el ends here
