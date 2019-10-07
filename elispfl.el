@@ -154,7 +154,7 @@ Sign: (-> (U Str (-> Long Bool)) (-> Long Bool))"
            (otherwise (funcall matcher end)))
          (let ((prompt-end (cdr comint-last-prompt))
                (start (match-beginning 0)))
-           (> start prompt-end))
+           (>= start prompt-end))
          ;; Some matcher don't handle this
          (elispfl-inside-code?))))
 
