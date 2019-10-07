@@ -115,12 +115,10 @@ library/userland functions."
     (while (re-search-forward "\\_<.+?\\_>" end t)
       (when (elispfl-inside-code?)
         (let* ((sym (intern-soft (match-string-no-properties 0)))
-               ;; NOTE: We treat symbol after left round bracket as subroutine.
-               ;; May trigger false positive in list literal e.g. '(foo bar),
-               ;; but it's suitable for most cases.
-               ;; And another consideraion was that quotes were used
-               ;; frequently in macros.
-               (subr-call? (eq (char-before (match-beginning 0)) ?\()))
+               (beg (match-beginning 0))
+               ;; Only backquote was used frequently in macros.
+               (subr-call? (and (eq (char-before beg) ?\()
+                                (not (eq (char-before (- beg 1)) ?')))))
           (if (run-hook-with-args-until-success
                'elispfl-exclude-rule-functions sym subr-call?)
               (throw 'stop nil)
