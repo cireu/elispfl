@@ -44,7 +44,7 @@
     ;; NOTE: Of course we can colorize `provide' and `require'
     ;; like subr, but it's ugly because its argument will be
     ;; colorized in same face.
-    (memq sym '(provide require))))
+    (memq sym '(provide require featurep))))
 
 (defcustom elispfl-exclude-rule-functions
   '(elispfl-default-exclude-rule-function)
