@@ -34,6 +34,30 @@
 (require 'lisp-mode)
 (eval-when-compile (require 'cl-lib))
 
+(defgroup elispfl ()
+  "Enhanced font-lock for Elisp."
+  :group 'lisp)
+
+(defun elispfl-default-exclude-rule-function (sym subr-call?)
+  "Default exclude rules for `elispfl'."
+  (when subr-call?
+    ;; NOTE: Of course we can colorize `provide' and `require'
+    ;; like subr, but it's ugly because its argument will be
+    ;; colorized in same face.
+    (memq sym '(provide require))))
+
+(defcustom elispfl-exclude-rule-functions
+  '(elispfl-default-exclude-rule-function)
+  "A list of rules determines a symbol should not be handled by elispfl.
+
+A rule is a function accept two arguments, the symbol being highlight
+and a boolean indicates whether this symbol is treated as a call of subroutine.
+
+When start matching, all rules will be run sequentially, if one of them
+returns non-nil. `elispfl' will pass control to other font-lock keywords."
+  :type '(repeat function)
+  :group 'elispfl)
+
 (defvar elispfl-face nil
   "A variable to hold current face used to render.")
 
@@ -96,11 +120,14 @@ library/userland functions."
                ;; but it's suitable for most cases.
                ;; And another consideraion was that quotes were used
                ;; frequently in macros.
-               (subr-call? (eq (char-before (match-beginning 0)) ?\())
-               (face (elispfl--get-face sym subr-call?)))
-          (when face
-            (setq elispfl-face face)
-            (throw 'stop t)))))
+               (subr-call? (eq (char-before (match-beginning 0)) ?\()))
+          (if (run-hook-with-args-until-success
+               'elispfl-exclude-rule-functions sym subr-call?)
+              (throw 'stop nil)
+            (let ((face (elispfl--get-face sym subr-call?)))
+              (when face
+                (setq elispfl-face face)
+                (throw 'stop t)))))))
     nil))
 
 (defvar elispfl--elisp-mode-extra-font-lock-keyword
