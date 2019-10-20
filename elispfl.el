@@ -32,7 +32,8 @@
 (require 'advice)
 (require 'font-lock)
 (require 'lisp-mode)
-(eval-when-compile (require 'cl-lib))
+(eval-when-compile (require 'cl-lib)
+                   (require 'comint))
 
 (defgroup elispfl ()
   "Enhanced font-lock for Elisp."
