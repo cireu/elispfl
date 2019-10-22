@@ -122,7 +122,7 @@ library/userland functions."
                                 (not (eq (char-before (- beg 1)) ?')))))
           (if (run-hook-with-args-until-success
                'elispfl-exclude-rule-functions sym subr-call?)
-              (throw 'stop nil)
+              nil
             (let ((face (elispfl--get-face sym subr-call?)))
               (when face
                 (setq elispfl-face face)
