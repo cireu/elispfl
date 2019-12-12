@@ -173,7 +173,7 @@ Sign: (-> (U Str (-> Long Bool)) (-> Long Bool))"
 (define-minor-mode elispfl-ielm-mode
   "Enhanced font lock for `ielm'."
   :global t
-  (let ((executor (if elispfl-mode
+  (let ((executor (if elispfl-ielm-mode
                       #'font-lock-add-keywords
                     #'font-lock-remove-keywords)))
     (funcall executor 'inferior-emacs-lisp-mode
