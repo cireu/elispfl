@@ -135,7 +135,7 @@ library/userland functions."
 ;;;###autoload
 (define-minor-mode elispfl-mode
   "Enhanced font lock for `emacs-lisp-mode'."
-  :global t
+  :global nil
   (let ((executor (if elispfl-mode
                       #'font-lock-add-keywords
                     #'font-lock-remove-keywords)))
@@ -172,7 +172,7 @@ Sign: (-> (U Str (-> Long Bool)) (-> Long Bool))"
 ;;;###autoload
 (define-minor-mode elispfl-ielm-mode
   "Enhanced font lock for `ielm'."
-  :global t
+  :global nil
   (let ((executor (if elispfl-ielm-mode
                       #'font-lock-add-keywords
                     #'font-lock-remove-keywords)))
